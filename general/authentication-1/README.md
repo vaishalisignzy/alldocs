@@ -1,0 +1,3 @@
+# Authentication
+
+First, you have to call the login API. You will get an access-token using which you can do further calls to other different endpoints by passing this access-token in the authorization header. Anybody with your API key/password or an Access Token generated using them can access all information you have created and also send requests on your behalf. It is strongly recommended to not send API-key/Password to the client-side and instead use a reverse proxy to call Signzy APIs. If in case you think an access token is compromised, you should delete it using logout. Let us know if your Signzy Password/API-key is compromised as soon as possible, so that we can disable & create new ones and prevent any misuse of your data.
