@@ -1,23 +1,12 @@
 # Table of contents
 
-* [Fiserv API Specifications](README.md)
-* [Authentication](authentication.md)
-* [Security](security.md)
-* [API Error Codes](api-error-codes.md)
-* [File Exchange - persist.signzy.tech](file-exchange-persist.signzy.tech.md)
-* [Recommendations - Input images & videos](recommendations-input-images-and-videos.md)
+## ID CARD EXTRACTION
 
-## Indian OVD Workflow
-
-* [Identity Creation](indian-ovd-workflow/indian-id-workflow.md)
-* [Combined OCR](indian-ovd-workflow/combined-ocr.md)
-* [Combined Verification](indian-ovd-workflow/combined-verification.md)
-
-## Matchers
-
-* [Text Match](matchers/text-match.md)
-* [Name Match](matchers/name-match.md)
-
-***
-
-* [Help and Support](help-and-support.md)
+* [ID Card Extraction SDK](README.md)
+* [User Flow](id-card-extraction/user-flow.md)
+* [Addition of the SDK to your project](id-card-extraction/addition-of-the-sdk-to-your-project.md)
+* [How to use SDK](id-card-extraction/how-to-use-sdk.md)
+* [Customizations](id-card-extraction/customizations.md)
+* [Image Quality Requirements](id-card-extraction/image-quality-requirements.md)
+* [Releases](id-card-extraction/releases.md)
+* [Integration Document - Deprecated](id-card-extraction/master.md)
