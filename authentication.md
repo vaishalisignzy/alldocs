@@ -1,29 +1,86 @@
 # Authentication
 
-## Login.py
+**Authentication is the method which ensures primarily two things:**‌
 
-It authenticates the user at login. The requested JSON contains the username and password that was entered on the login page.
+* The credentials provided by you are authentic to you alone. i.e it is not misused by any one in any other way
+* A secure login and logout from the system so that your account information is not compromised in any way
 
-If the JSON is empty then the logger will give an error message as “Login attempt failed due to invalid json.” and a response status of 400 Bad Request, and returns a JSON indicating an error with the message “invalid JSON syntax”, status “400” and name “Invalid JSON sent to /login”.
+Signzy always ensures user authenticity with the help of a unique username and an API key that is specifically tailored to individual clients. The key also acts like your password to the APIs. You need to have an access token for making any further API calls, which you can receive by logging in manually or through a program using these credentials. These helps users maintain the authenticity of their credentials and provides hassle-free use without any difficulty.‌ Each call to the APIs should include an 'Authorization' header or 'access\_token' query parameter for authentication.
 
-If any of the username or password fields are empty then the logger will give an error message as “Login attempt failed, username and password fields not present.” and a response status of 400 Bad Request, and returns a JSON indicating an error with the message “invalid JSON syntax”, status “400” and name “Invalid input parameters to /login”.
+Signzy APIs adhere to authentication defined by Swagger 2.0 specifications. The Swagger specification defines a set of files required to describe API’s like this (RESTful API’s).&#x20;
 
-For a given username it will fetch the document containing all the details of that username if it exists in the collection “users”.
+**Logging in**‌
 
-If the document is empty then the logger will give an error message “User login attempt failed due to wrong username: “ and a response status of 400 Bad Request, and returns a JSON indicating an error with the message “Username or password is incorrect.”, status “400” and name “Invalid Credentials”.
+The first step is to log in to the API service with the credentials that have been provided to you. This requires a simple HTTP call. The code below mentions data to be input, expected output and meaning of fields.
 
-After verifying the username, it verifies the password and if password verification fails, the logger displays an error “User login attempt failed due to password mismatch: “ and a response status of 400 Bad Request and returns a JSON indicating an error with the message “Username or password is incorrect.”, status “400” and name “Invalid Credentials”.
+{% swagger baseUrl="https://signzy.tech" path="/api/v2/patrons/login" method="post" summary="Data Exchange" %}
+{% swagger-description %}
+This method allows authentication during login and logout.
+{% endswagger-description %}
 
-After successful verification of the password, the logger displays a message “User Logged in: “ and creates the authorization token for that user.
+{% swagger-parameter in="body" name="username" type="string" %}
+The username for the user
+{% endswagger-parameter %}
 
-If the token is empty then a response status of 500 Internal Server Error is generated and a JSON is returned indicating error with message “server error.”, status “500” and name “auth token generation error”.
+{% swagger-parameter in="body" name="password" type="string" %}
+The password for the user
+{% endswagger-parameter %}
 
-If the token is successfully generated then it gets the name of the user and returns a response status 200 Ok and a JSON indicating “result" with the generated token, status as 200 and user's name.
+{% swagger-response status="200" description="" %}
+```
+ {
+    "id": "...accessToken...",
+    "ttl": ..ttl..,
+    "created": "..created..",
+    "userId": "..patronId..."
+  }
+```
+{% endswagger-response %}
+{% endswagger %}
 
-## Authorization code
+{% tabs %}
+{% tab title="Request Schema" %}
+```
+{
+    "username": "..username..",
+    "password": "..password.."
+  }
+```
+{% endtab %}
 
-It will authenticate the user before every action.
+{% tab title="Response Parameters" %}
+| PARAMETER NAME | DESCRIPTION                                                             |
+| -------------- | ----------------------------------------------------------------------- |
+| id             | This is the access token used for accessing Signzy APIs.                |
+| ttl            | This denotes the number of seconds for which the access token is valid. |
+| created        | The login creation was successful.                                      |
+| userId         | This is the userId as assigned to file.                                 |
+{% endtab %}
+{% endtabs %}
 
-It authenticates the user by verifying its authorisation token. If verification fails then the logger will give an error message displaying authentication failed for a particular action and a response status 401 Unauthorised, and returns a JSON indicating an error with message “Invalid Authentication.”, status “401” and name “Unauthorised request.”.
+**Sending authenticated requests**‌
 
-After successful verification user can perform its action.
+As discussed in the previous section, users can easily send requests to other endpoints of the API service after receiving the access token from the login API call. This can be done in two ways:‌
+
+* By passing the access-token in the Authorization header
+* By creating an access\_token query (GET) parameter.
+
+‌However, the second method is not commonly used as the query parameters are sometimes saved in the log files, thereby exposing vulnerabilities until the access\_token is deleted from sessions.‌
+
+**Security**‌
+
+An important aspect to remember while using the API key/password is that anybody with your API key/password or an Access Token generated using them can access all the information you have created and also send requests on your behalf. Therefore, it is highly recommended that the API-key/Password is not provided to client side. Instead, we can make use of a reverse proxy to call Signzy APIs.‌
+
+&#x20;In case you think an access token is compromised, you should delete it using logout. Let us know if your Signzy Password/API-key is compromised as soon as possible, so that we can disable & create new ones and prevent any misuse of your data.‌
+
+**Logging out**‌
+
+To logout you simply need to call the logout route with the access token in 'access\_token' query parameter or as 'Authorization' header.
+
+```
+ // Logout    For Test Credentials    // POST :: https://preproduction.signzy.tech/api/v2/patrons/logout?access_token=...accessToken...    For Production Credentials    // POST :: https://signzy.tech/api/v2/patrons/logout?access_token=...accessToken...    // Response is 204 status code with no content, indicating the Access-token has been deleted.
+```
+
+‌
+
+&#x20;[​![Run in Postman](https://run.pstmn.io/button.svg)](https://www.getpostman.com/run-collection/8adcfff50cd73a1f229c)
