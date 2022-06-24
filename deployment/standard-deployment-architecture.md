@@ -1,0 +1,2 @@
+# Standard deployment architecture
+
